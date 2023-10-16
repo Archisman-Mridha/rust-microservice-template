@@ -13,6 +13,7 @@ use tonic::{
   Request,
   transport::{Server, ServerTlsConfig, Identity}
 };
+use tracing::{instrument, event, Level};
 
 pub struct GrpcAdapter { }
 
@@ -78,6 +79,7 @@ impl GrpcAdapter {
   }
 }
 
+#[derive(Debug)]
 pub struct AuthenticationServiceImpl {
   usecases: &'static Usecases
 }
@@ -85,6 +87,7 @@ pub struct AuthenticationServiceImpl {
 #[async_trait]
 impl AuthenticationService for AuthenticationServiceImpl {
 
+  #[instrument(name = "StartRegistration")]
   async fn start_registration(&self, request: Request<StartRegistrationRequest>) -> Result<Response<( )>, Status> {
     let request= request.into_inner( );
 
@@ -97,17 +100,27 @@ impl AuthenticationService for AuthenticationServiceImpl {
 
       Err(error) => {
         let code= getGrpcStatusCode(&error);
+
+        if code == Code::Internal {
+          event!(Level::ERROR, %error);
+        }
+
         Err(Status::new(code, error.to_string( )))
       }
     };
   }
 
+  #[instrument(name = "VerifyEmail")]
   async fn verify_email(&self, request: Request<VerifyEmailRequest>) -> Result<Response<AuthenticationResponse> ,Status> {
     let request= request.into_inner( );
 
     return match self.usecases.verifyEmail(&request).await {
       Ok(output) => Ok(Response::new(output)),
-      Err(_) => Err(Status::new(Code::Internal, SERVER_ERROR))
+
+      Err(error) => {
+        event!(Level::ERROR, %error);
+        Err(Status::new(Code::Internal, SERVER_ERROR))
+      }
     };
   }
 }

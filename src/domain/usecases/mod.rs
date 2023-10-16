@@ -1,3 +1,4 @@
+#[derive(Debug)]
 pub struct Usecases { }
 
 mod start_registration;

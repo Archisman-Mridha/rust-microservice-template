@@ -3,7 +3,9 @@ use lazy_static::lazy_static;
 
 pub struct Config {
   pub GRPC_PORT: String,
-  pub TLS_DIR: String
+  pub TLS_DIR: String,
+
+  pub JAEGER_COLLECTOR_URL: String
 }
 
 impl Config {
@@ -15,7 +17,9 @@ impl Config {
 
     return Self {
       GRPC_PORT: getEnv("GRPC_PORT"),
-      TLS_DIR: getEnv("TLS_DIR")
+      TLS_DIR: getEnv("TLS_DIR"),
+
+      JAEGER_COLLECTOR_URL: getEnv("JAEGER_COLLECTOR_URL")
     };
   }
 }

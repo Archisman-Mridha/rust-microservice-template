@@ -19,8 +19,9 @@ mod proto {
 }
 
 use std::process::exit;
+use opentelemetry::global::shutdown_tracer_provider;
 use utils::THREAD_CANCELLATION_TOKEN;
-use adapters::GrpcAdapter;
+use adapters::{GrpcAdapter, OpentelemetryAdapter};
 use domain::Usecases;
 use tokio::{signal, spawn};
 
@@ -28,6 +29,8 @@ use tokio::{signal, spawn};
 async fn main( ) -> Result<( ), ( )> {
 
   let usecases: &'static Usecases= &Usecases{ };
+
+  OpentelemetryAdapter::initTraceExporter( );
 
   let grpcAdapter= &GrpcAdapter{ };
 
@@ -39,7 +42,9 @@ async fn main( ) -> Result<( ), ( )> {
     let error= signal::ctrl_c( ).await.err( );
     println!("Received program shutdown signal");
 
-    let _ =&THREAD_CANCELLATION_TOKEN.cancel( );
+    let _ =&THREAD_CANCELLATION_TOKEN.cancel( ); // Do cleanup tasks in currently active Tokio
+                                                 // threads.
+    shutdown_tracer_provider( );
 
     match error {
       None => exit(0),

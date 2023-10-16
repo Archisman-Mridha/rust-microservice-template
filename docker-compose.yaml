@@ -1,0 +1,12 @@
+version: "3"
+name: authentication-microservice
+
+services:
+
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    ports:
+      - 4317:4317   # gRPC endpoint
+      - 16686:16686 # UI dashboard endpoint
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
