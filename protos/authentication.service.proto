@@ -1,0 +1,36 @@
+syntax= "proto3";
+
+package authentication.service;
+
+import "google/protobuf/empty.proto";
+
+service AuthenticationService {
+
+  // StartRegistration is invoked when a new user wants to register. If the registration details are
+  // valid, then a verification token is generated and emailed to the user. The registration details
+  // and verifiction token, are saved in the database with an expiry time of 5 minutes. The user
+  // needs to verify the email within these 5 minutes.
+  rpc StartRegistration(StartRegistrationRequest) returns(google.protobuf.Empty) { }
+
+  // VerifyEmail is invoked to confirm the user's email. If the email - verification-token
+  // combination is correct, then the user has completed the registration process successfully .. A
+  // JWT will be generated and sent back in response.
+  rpc VerifyEmail(VerifyEmailRequest) returns(AuthenticationResponse) { }
+
+}
+
+message StartRegistrationRequest {
+  string email= 1;
+  string username= 2;
+
+  string password= 3;
+}
+
+message VerifyEmailRequest {
+  string email= 1;
+  string verification_code= 2;
+}
+
+message AuthenticationResponse {
+  string jwt= 1;
+}

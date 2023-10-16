@@ -1,0 +1,23 @@
+[package]
+name = "rust-microservice-template"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = "1.0.75"
+derive_more = "0.99.17"
+dotenv = "0.15.0"
+lazy_static = "1.4.0"
+prost = "0.12.1"
+tokio = { version = "1.33.0", features = ["rt-multi-thread", "macros", "signal"] }
+tokio-util = "0.7.9"
+tonic = { version = "0.10.2", features = ["gzip", "tls"] }
+tonic-health = "0.10.2"
+tonic-reflection = "0.10.2"
+tonic-types = "0.10.2"
+validator = { version = "0.16.1", features = ["derive"] }
+
+[build-dependencies]
+tonic-build = "0.10.2"
