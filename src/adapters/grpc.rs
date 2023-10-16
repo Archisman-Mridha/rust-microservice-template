@@ -68,7 +68,7 @@ impl GrpcAdapter {
     let tlsConfig= ServerTlsConfig::new( ).identity(
       Identity::from_pem(certificateFilepath, privateKeyFilepath));
 
-    println!("Starting gRPC server");
+    tracing::info!("Starting gRPC server");
 
     Server::builder( )
       .tls_config(tlsConfig).expect("Error enforcing TLS config on the gRPC server")

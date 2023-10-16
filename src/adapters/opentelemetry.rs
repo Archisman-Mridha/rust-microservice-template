@@ -45,7 +45,7 @@ impl OpentelemetryAdapter {
       .try_init( )
       .expect("Error initiliazing tracing-subscriber for OpenTelemetry");
 
-    println!("Created OpenTelemetry tracer and trace exporter successfully");
+    tracing::info!("Created OpenTelemetry tracer and trace exporter successfully");
   }
 
   // initMetricsExporter
@@ -61,7 +61,7 @@ impl OpentelemetryAdapter {
       let router= Router::new( )
         .route("/metrics", get(| | async { prometheus_exporter::encode_http_response( ) }));
 
-      println!("Starting metrics server");
+      tracing::info!("Starting metrics server");
 
       axum::Server::bind(&address)
         .serve(router.into_make_service( ))

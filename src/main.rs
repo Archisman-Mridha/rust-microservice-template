@@ -41,7 +41,7 @@ async fn main( ) -> Result<( ), ( )> {
 
   /* Gracefully shutdown on receiving program shutdown signal. */ {
     let error= signal::ctrl_c( ).await.err( );
-    println!("Received program shutdown signal");
+    tracing::info!("Received program shutdown signal");
 
     let _ =&THREAD_CANCELLATION_TOKEN.cancel( ); // Do cleanup tasks in currently active Tokio
                                                  // threads.
@@ -51,7 +51,7 @@ async fn main( ) -> Result<( ), ( )> {
       None => exit(0),
 
       Some(error) => {
-        println!("Error: {}", error);
+        tracing::error!("Error: {}", error);
         exit(1);
       }
     }
