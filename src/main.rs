@@ -31,6 +31,8 @@ async fn main( ) -> Result<( ), ( )> {
   let usecases: &'static Usecases= &Usecases{ };
 
   OpentelemetryAdapter::initTraceExporter( );
+  OpentelemetryAdapter::initMetricsExporter( );
+  OpentelemetryAdapter::initLogsExporter( );
 
   let grpcAdapter= &GrpcAdapter{ };
 

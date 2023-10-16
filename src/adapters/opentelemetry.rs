@@ -44,4 +44,8 @@ impl OpentelemetryAdapter {
 
     println!("Created OpenTelemetry tracer and trace exporter successfully");
   }
+
+  pub fn initMetricsExporter( ) { }
+
+  pub fn initLogsExporter( ) { }
 }

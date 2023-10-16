@@ -1,6 +1,5 @@
 use anyhow::{Result, anyhow};
 use crate::utils;
-
 use super::Usecases;
 use derive_more::Constructor;
 use validator::{Validate, ValidationError};
