@@ -32,7 +32,6 @@ async fn main( ) -> Result<( ), ( )> {
 
   OpentelemetryAdapter::initTraceExporter( );
   OpentelemetryAdapter::initMetricsExporter( );
-  OpentelemetryAdapter::initLogsExporter( );
 
   let grpcAdapter= &GrpcAdapter{ };
 

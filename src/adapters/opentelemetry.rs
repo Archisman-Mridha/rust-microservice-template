@@ -1,10 +1,13 @@
 use std::{time::Duration, borrow::Cow};
+use autometrics::prometheus_exporter;
+use axum::{Router, routing::get};
 use opentelemetry::KeyValue;
 use opentelemetry_otlp::{new_pipeline, new_exporter, WithExportConfig, Protocol};
 use opentelemetry_sdk::{runtime, Resource};
 use opentelemetry_semantic_conventions::resource;
+use tokio::spawn;
 use tracing_subscriber::{prelude::__tracing_subscriber_SubscriberExt, util::SubscriberInitExt};
-use crate::config::CONFIG;
+use crate::{config::CONFIG, utils};
 use opentelemetry_sdk::trace;
 
 pub struct OpentelemetryAdapter { }
@@ -45,7 +48,26 @@ impl OpentelemetryAdapter {
     println!("Created OpenTelemetry tracer and trace exporter successfully");
   }
 
-  pub fn initMetricsExporter( ) { }
+  // initMetricsExporter
+  pub fn initMetricsExporter( ) {
+    prometheus_exporter::init( );
 
-  pub fn initLogsExporter( ) { }
+    let threadCancellationToken= utils::THREAD_CANCELLATION_TOKEN.clone( );
+    spawn(async move {
+      let address= format!("[::]:{}", &*CONFIG.METRICS_SERVER_PORT);
+      let address= address.parse( )
+                          .expect(&format!("Error parsing address where metrics will be published : {}", address));
+
+      let router= Router::new( )
+        .route("/metrics", get(| | async { prometheus_exporter::encode_http_response( ) }));
+
+      println!("Starting metrics server");
+
+      axum::Server::bind(&address)
+        .serve(router.into_make_service( ))
+        .with_graceful_shutdown(threadCancellationToken.cancelled( ))
+        .await
+        .expect("Error starting HTTP metrics server");
+    });
+  }
 }

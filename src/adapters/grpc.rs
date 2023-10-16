@@ -1,5 +1,6 @@
 use std::{time::Duration, path::PathBuf, fs, str::FromStr};
 use anyhow::Error;
+use autometrics::autometrics;
 use tokio::{spawn, time::interval};
 use tonic::Code;
 use crate::proto::{*, authentication_service_server::*};
@@ -87,6 +88,7 @@ pub struct AuthenticationServiceImpl {
 #[async_trait]
 impl AuthenticationService for AuthenticationServiceImpl {
 
+  #[autometrics]
   #[instrument(name = "StartRegistration")]
   async fn start_registration(&self, request: Request<StartRegistrationRequest>) -> Result<Response<( )>, Status> {
     let request= request.into_inner( );
@@ -110,6 +112,7 @@ impl AuthenticationService for AuthenticationServiceImpl {
     };
   }
 
+  #[autometrics]
   #[instrument(name = "VerifyEmail")]
   async fn verify_email(&self, request: Request<VerifyEmailRequest>) -> Result<Response<AuthenticationResponse> ,Status> {
     let request= request.into_inner( );

@@ -8,7 +8,6 @@
 **/.git
 **/.gitignore
 
-/bin
 /target
 
 tls

@@ -10,3 +10,19 @@ services:
       - 16686:16686 # UI dashboard endpoint
     environment:
       - COLLECTOR_OTLP_ENABLED=true
+
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - 9090:9090
+    volumes:
+      - ./tests/observability/metrics/configs/prometheus/config.yaml:/etc/prometheus/prometheus.yml
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - 3000:3000
+    volumes:
+      - ./tests/observability/metrics/configs/grafana:/etc/grafana
+    command:
+      - --config=/etc/grafana/config.ini
