@@ -1,7 +1,0 @@
-/target
-
-.dockerignore
-Dockerfile
-
-.gitignore
-.git

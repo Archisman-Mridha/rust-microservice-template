@@ -1,8 +1,5 @@
-# Multistage Container Builds for Rust
-
-This repository demonstrates the use of *`cargo-chef`* to **optimize multistage container builds for Rust projects**.
+# Rust Microservice Template
 
 ## References
 
-- A youtube video from where I got to know this - https://www.youtube.com/watch?v=xuqolj01D7M.
-- *`cargo-chef`* official repository - https://github.com/LukeMathWalker/cargo-chef.
+If you want to know how to use `cargo-chef` to **optimize multistage container builds for Rust projects**, check out [super fast rust docker builds with super small images using multi-stage and cargo-chef | rustlang](https://www.youtube.com/watch?v=xuqolj01D7M).
